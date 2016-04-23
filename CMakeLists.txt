@@ -10,6 +10,7 @@ project(FlexYacc)
 # 5 clean: cmake --build ./build-cmake/Debug --target clean
 
 
+find_package(BISON)
 find_package(FLEX)
 
 set(CMAKE_C_COMPILER "/usr/bin/gcc")

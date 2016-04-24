@@ -56,7 +56,12 @@
 %token <int>         INT_1_12     "1~12"
 %token <int>         INT_13_24    "13~24"
 %token <int>         INT_25_31    "25~31"
-%token <int>         INT_32_60    "32~60"
+%token <int>         INT_32_59    "32~59"
+
+%type <int> int_1_24
+%type <int> int_0_24
+%type <int> int_1_31
+%type <int> int_0_59
 
 %locations
 
@@ -70,49 +75,81 @@ list
   ;
 
 date
-  : INT_0
-  | INT_13_24
-  | INT_25_31
-  | INT_32_60
-  | NEWLINE { driver.add_newline(); }
-
-  | SYM_DASH
-  {
-    printf("\t==date -- SYM_DASH\n");
-  }
-
-  | date_1
-  {
-    printf("\t==date -- date_1\n");
-  }
-
-  | ignored
-  ;
-
-date_1
-  : INT_YEAR SYM_DASH month_1
+  : INT_YEAR SYM_DASH month
   {
     printf("\t==date_1\n");
     driver.SetYear($1);
     driver.add_date_year();
   }
+  | ignored
   ;
 
-month_1
-  : INT_1_12 SYM_DASH INT_1_12
+month
+  : INT_1_12 SYM_DASH day
   {
     driver.SetMonth($1);
-    driver.SetDay($3);
   }
-  | INT_1_12 SYM_DASH INT_13_24
+  ;
+
+day
+  : int_1_31
   {
-    driver.SetMonth($1);
-    driver.SetDay($3);
+    driver.SetDay($1);
   }
-  | INT_1_12 SYM_DASH INT_25_31
+  ;
+
+hour
+  : int_0_24
   {
-    driver.SetMonth($1);
-    driver.SetDay($3);
+    driver.SetHour($1);
+  }
+  ;
+
+int_1_24
+  : INT_1_12
+  {
+    $$ = $1;
+  }
+  | INT_13_24
+  {
+    $$ = $1;
+  }
+  ;
+
+int_0_24
+  : INT_0
+  {
+    $$ = $1;
+  }
+  | int_1_24
+  {
+    $$ = $1;
+  }
+  ;
+
+int_1_31
+  : int_1_24
+  {
+    $$ = $1;
+  }
+  | INT_25_31
+  {
+    $$ = $1;
+  }
+  ;
+
+int_0_59
+  : INT_0
+  {
+    $$ = $1;
+  }
+  | int_1_31
+  {
+    $$ = $1;
+  }
+  | INT_32_59
+  {
+    $$ = $1;
   }
   ;
 
@@ -126,6 +163,16 @@ ignored
   | INT_1_12
   {
     printf("\t\t Ignored: int_1_12=%d\n", $1);
+  }
+  | INT_13_24
+  | INT_25_31
+  | INT_32_59
+  | NEWLINE { driver.add_newline(); }
+  | INT_0
+
+  | SYM_DASH
+  {
+    printf("\t==date -- SYM_DASH\n");
   }
   ;
 

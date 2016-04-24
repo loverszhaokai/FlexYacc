@@ -54,22 +54,16 @@ typedef MC::MC_Parser::token token;
                    return( token::INT_YEAR );
                  }
 
-60 {
-     std::cout << "Find keyword:60" << "\t text=" << yytext << "||\n";
-     yylval->build<int>() = atoi( yytext );
-     return( token::INT_32_60 );
-   }
-
 [4-5][0-9] {
              std::cout << "Find keyword:[4-5][0-9]" << "\t text=" << yytext << "||\n";
              yylval->build<int>() = atoi( yytext );
-             return( token::INT_32_60 );
+             return( token::INT_32_59 );
            }
 
 3[3-9] {
          std::cout << "Find keyword:3[3-9]" << "\t text=" << yytext << "||\n";
          yylval->build<int>() = atoi( yytext );
-         return( token::INT_32_60 );
+         return( token::INT_32_59 );
        }
 
 3[0-1] {

@@ -42,6 +42,12 @@ typedef MC::MC_Parser::token token;
     return( token::SYM_DASH );
   }
 
+\: {
+    std::cout << "Find keyword::" << "\t text=" << yytext << "||\n";
+    yylval->build<std::string>( yytext );
+    return( token::SYM_COLON );
+  }
+
 19[7-9][0-9] {
                std::cout << "Find keyword:19[7-9][0-9]" << "\t text=" << yytext << "||\n";
                yylval->build<int>() = atoi( yytext );
@@ -119,6 +125,12 @@ typedef MC::MC_Parser::token token;
     yylval->build<int>() = atoi( yytext );
     return( token::INT_0 );
   }
+
+[0-9]+ {
+         std::cout << "Find keyword:[0-9]+" << "\t text=" << yytext << "||\n";
+         yylval->build<int>() = atoi( yytext );
+         return( token::INT_OTHERS );
+       }
 
 \n          {
                // Update line number

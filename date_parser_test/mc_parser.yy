@@ -49,6 +49,7 @@
 
 // Key symbols
 %token <std::string> SYM_DASH     "-"
+%token <std::string> SYM_COLON    ":"
 
 // Numbers
 %token <int>         INT_YEAR     "1970~2999 "
@@ -57,6 +58,8 @@
 %token <int>         INT_13_24    "13~24"
 %token <int>         INT_25_31    "25~31"
 %token <int>         INT_32_59    "32~59"
+
+%token <int>         INT_OTHERS   "other numbers"
 
 %type <int> int_1_24
 %type <int> int_0_24
@@ -75,17 +78,39 @@ list
   ;
 
 date
-  : INT_YEAR SYM_DASH month
+  : year_month_day_time
   {
-    printf("\t==date_1\n");
-    driver.SetYear($1);
+    printf("\t==Find year month day time\n");
+    driver.add_date_year();
+  }
+  | year_month_day
+  {
+    printf("\t==Find date\n");
+    driver.SetHour(0);
+    driver.SetMinute(0);
+    driver.SetSecond(0);
     driver.add_date_year();
   }
   | ignored
   ;
 
+year_month_day
+  : year SYM_DASH month SYM_DASH day
+  ;
+
+year_month_day_time
+  : year_month_day time
+  ;
+
+year
+  : INT_YEAR
+  {
+    driver.SetYear($1);
+  }
+  ;
+
 month
-  : INT_1_12 SYM_DASH day
+  : INT_1_12
   {
     driver.SetMonth($1);
   }
@@ -98,10 +123,40 @@ day
   }
   ;
 
+time
+  : hour_minute_second
+  | hour_minute
+  ;
+
+hour_minute
+  : hour SYM_COLON minute
+  {
+    driver.SetSecond(0);
+  }
+  ;
+
+hour_minute_second
+  : hour_minute SYM_COLON second
+  ;
+
 hour
   : int_0_24
   {
     driver.SetHour($1);
+  }
+  ;
+
+minute
+  : int_0_59
+  {
+    driver.SetMinute($1);
+  }
+  ;
+
+second
+  : int_0_59
+  {
+    driver.SetSecond($1);
   }
   ;
 
@@ -160,19 +215,22 @@ ignored
   {
     printf("\t\t Ignored: year=%d int_1_12=%d\n", $1, $2);
   }
-  | INT_1_12
-  {
-    printf("\t\t Ignored: int_1_12=%d\n", $1);
-  }
-  | INT_13_24
-  | INT_25_31
-  | INT_32_59
   | NEWLINE { driver.add_newline(); }
   | INT_0
 
   | SYM_DASH
+  | SYM_COLON
   {
-    printf("\t==date -- SYM_DASH\n");
+    printf("\t\t Ignored: SYM_COLON\n");
+  }
+
+  | INT_OTHERS
+  | year INT_OTHERS
+  | year_month_day INT_OTHERS
+
+  | int_0_59
+  {
+    printf("\t\t Ignored: int_0_59=%d\n", $1);
   }
   ;
 

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.3)
 project(date_parser_test)
 
-include_directories(. ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(. ../ ${CMAKE_CURRENT_BINARY_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -11,11 +11,16 @@ FLEX_TARGET(mc_lexer mc_lexer.l ${CMAKE_CURRENT_BINARY_DIR}/mc_lexer.cc)
 ADD_FLEX_BISON_DEPENDENCY(mc_lexer mc_parser)
 
 set(SOURCE_FILES
-    main.cc
     mc_driver.cc
     mc_driver.h
     mc_scanner.h)
 
-add_executable(date_parser_test ${SOURCE_FILES}
+add_executable(date_parser_test main.cc ${SOURCE_FILES}
+               ${BISON_mc_parser_OUTPUTS}
+               ${FLEX_mc_lexer_OUTPUTS})
+
+add_executable(date_parser_test_unittest test.cc
+               ../time_util.cc ../time_util.h ../test.cc ../test.h
+               ${SOURCE_FILES}
                ${BISON_mc_parser_OUTPUTS}
                ${FLEX_mc_lexer_OUTPUTS})

@@ -114,7 +114,7 @@ std::ostream& MC::MC_Driver::print( std::ostream &stream )
 {
   int i = 0;
   for (auto item : dates) {
-    stream << "date[" << i++ << "]: " << item << "\n";    
+    stream << item << "\n";
   }
   return(stream);
 }

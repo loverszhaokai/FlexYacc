@@ -24,15 +24,26 @@ public:
    void add_newline();
    void add_char();
 
-   void add_date(const int year = -1,
-                 const int month = -1,
-                 const int day = -1,
-                 const int hour = -1,
-                 const int minute = -1,
-                 const int seconds = -1);
+   void SetYear(const int _year) { year = _year; }
+   void SetMonth(const int _month) { month = _month; }
+   void SetDay(const int _day) { day = _day; }
+   void SetHour(const int _hour) { hour = _hour; }
+   void SetMinute(const int _minute) { minute = _minute; }
+   void SetSecond(const int _second) { second = _second; }
+
+   void add_date_year();
+   void add_date_month();
 
    std::ostream& print(std::ostream &stream);
+
 private:
+  int year = 0;
+  int month = 0;
+  int day = 0;
+  int hour = 0;
+  int minute = 0;
+  int second = 0;
+
    int chars      = 0;
    int words      = 0;
    int lines      = 0;

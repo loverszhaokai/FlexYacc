@@ -36,26 +36,22 @@ typedef MC::MC_Parser::token token;
             yylval = lval;
 %}
 
-天前        {
-               std::cout << "Find keyword:天前" << "\t text=" << yytext << "||\n";
-               return( token::LOWER );
-            }
-
-天          {
-               std::cout << "Find keyword:天" << "\t text=" << yytext << "||\n";
-               return( token::LOWER );
-            }
+\- {
+    std::cout << "Find keyword:-" << "\t text=" << yytext << "||\n";
+    yylval->build<std::string>( yytext );
+    return( token::SYM_DASH );
+  }
 
 19[7-9][0-9] {
-               std::cout << "Find keyword:YEAR" << "\t text=" << yytext << "||\n";
+               std::cout << "Find keyword:19[7-9][0-9]" << "\t text=" << yytext << "||\n";
                yylval->build<int>() = atoi( yytext );
-               return( token::YEAR );
+               return( token::INT_YEAR );
              }
 
 2[0-9][0-9][0-9] {
-                   std::cout << "Find keyword:YEAR" << "\t text=" << yytext << "||\n";
+                   std::cout << "Find keyword:2[0-9][0-9][0-9]" << "\t text=" << yytext << "||\n";
                    yylval->build<int>() = atoi( yytext );
-                   return( token::YEAR );
+                   return( token::INT_YEAR );
                  }
 
 60 {
@@ -103,26 +99,26 @@ typedef MC::MC_Parser::token token;
 1[0-2] {
          std::cout << "Find keyword:1[0-2]" << "\t text=" << yytext << "||\n";
          yylval->build<int>() = atoi( yytext );
-         return( token::INT_10_12 );
+         return( token::INT_1_12 );
        }
 
 0[1-9] {
          std::cout << "Find keyword:0[1-9]" << "\t text=" << yytext << "||\n";
          yylval->build<int>() = atoi( yytext );
-         return( token::INT_01_09 );
+         return( token::INT_1_12 );
+       }
+
+[1-9] {
+         std::cout << "Find keyword:[1-9]" << "\t text=" << yytext << "||\n";
+         yylval->build<int>() = atoi( yytext );
+         return( token::INT_1_12 );
        }
 
 00 {
      std::cout << "Find keyword:00" << "\t text=" << yytext << "||\n";
      yylval->build<int>() = atoi( yytext );
-     return( token::INT_00 );
+     return( token::INT_0 );
    }
-
-[1-9] {
-         std::cout << "Find keyword:[1-9]" << "\t text=" << yytext << "||\n";
-         yylval->build<int>() = atoi( yytext );
-         return( token::INT_1_9 );
-       }
 
 0 {
     std::cout << "Find keyword:0" << "\t text=" << yytext << "||\n";

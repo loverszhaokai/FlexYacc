@@ -96,17 +96,18 @@ MC::MC_Driver::add_char()
    chars++; 
 }
 
-void MC::MC_Driver::add_date(const int year,
-                             const int month,
-                             const int day,
-                             const int hour,
-                             const int minute,
-                             const int seconds) {
+void MC::MC_Driver::add_date_year() {
   char date_buf[100];
-  if (year != -1 && month == -1) {
-    snprintf(date_buf, sizeof(date_buf), "%d", year);
-    dates.push_back(date_buf);
-  }
+  snprintf(date_buf, sizeof(date_buf), "%d-%02d-%02d %02d:%02d:%02d",
+    year, month, day, hour, minute, second);
+  dates.push_back(date_buf);
+}
+
+void MC::MC_Driver::add_date_month() {
+  char date_buf[100];
+  snprintf(date_buf, sizeof(date_buf), "%02d-%02d %02d:%02d:%02d",
+    month, day, hour, minute, second);
+  dates.push_back(date_buf);
 }
 
 std::ostream& MC::MC_Driver::print( std::ostream &stream )

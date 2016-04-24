@@ -47,18 +47,16 @@
 %token               NEWLINE
 %token               CHAR
 
-%token <int>         YEAR
-%token <int>         MONTH
-%token <int>         DAY
+// Key symbols
+%token <std::string> SYM_DASH     "-"
 
-%token <int>         INT_0
-%token <int>         INT_1_9
-%token <int>         INT_00
-%token <int>         INT_01_09
-%token <int>         INT_10_12
-%token <int>         INT_13_24
-%token <int>         INT_25_31
-%token <int>         INT_32_60
+// Numbers
+%token <int>         INT_YEAR     "1970~2999 "
+%token <int>         INT_0        "0"
+%token <int>         INT_1_12     "1~12"
+%token <int>         INT_13_24    "13~24"
+%token <int>         INT_25_31    "25~31"
+%token <int>         INT_32_60    "32~60"
 
 %locations
 
@@ -72,20 +70,63 @@ list
   ;
 
 date
-  : YEAR { driver.add_date($1); }
-  | MONTH   { driver.add_date($1); }
-  | INT_0   { driver.add_date($1); }
-  | INT_1_9   { driver.add_date($1); }
-  | INT_00   { driver.add_date($1); }
-  | INT_01_09   { driver.add_date($1); }
-  | INT_10_12   { driver.add_date($1); }
-  | INT_13_24   { driver.add_date($1); }
-  | INT_25_31   { driver.add_date($1); }
-  | INT_32_60   { driver.add_date($1); }
-  | LOWER   { driver.add_lower(); }
-  | WORD    { driver.add_word( $1 ); }
+  : INT_0
+  | INT_13_24
+  | INT_25_31
+  | INT_32_60
   | NEWLINE { driver.add_newline(); }
-  | CHAR    { driver.add_char(); }
+
+  | SYM_DASH
+  {
+    printf("\t==date -- SYM_DASH\n");
+  }
+
+  | date_1
+  {
+    printf("\t==date -- date_1\n");
+  }
+
+  | ignored
+  ;
+
+date_1
+  : INT_YEAR SYM_DASH month_1
+  {
+    printf("\t==date_1\n");
+    driver.SetYear($1);
+    driver.add_date_year();
+  }
+  ;
+
+month_1
+  : INT_1_12 SYM_DASH INT_1_12
+  {
+    driver.SetMonth($1);
+    driver.SetDay($3);
+  }
+  | INT_1_12 SYM_DASH INT_13_24
+  {
+    driver.SetMonth($1);
+    driver.SetDay($3);
+  }
+  | INT_1_12 SYM_DASH INT_25_31
+  {
+    driver.SetMonth($1);
+    driver.SetDay($3);
+  }
+  ;
+
+ignored
+  :
+  | CHAR {}
+  | INT_YEAR INT_1_12
+  {
+    printf("\t\t Ignored: year=%d int_1_12=%d\n", $1, $2);
+  }
+  | INT_1_12
+  {
+    printf("\t\t Ignored: int_1_12=%d\n", $1);
+  }
   ;
 
 %%

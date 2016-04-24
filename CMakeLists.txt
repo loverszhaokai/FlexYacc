@@ -25,6 +25,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build-cmake/${CMAKE_BUILD
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build-cmake/${CMAKE_BUILD_TYPE}/lib)
 
 add_subdirectory(date_parser)
+add_subdirectory(date_parser_test)
 add_subdirectory(how_to)
 add_subdirectory(simple_wc_example)
 add_subdirectory(third_party)

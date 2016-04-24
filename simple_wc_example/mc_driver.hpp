@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cstdint>
+
 #include "mc_scanner.hpp"
 #include "mc_parser.hh"
 
@@ -15,7 +16,6 @@ public:
    virtual ~MC_Driver();
 
    void parse( const char *filename );
-  
 
    void add_upper();
    void add_lower();
